@@ -17,7 +17,7 @@ import { PreviewStep } from "./steps/PreviewStep";
 const TOTAL_STEPS = 8;
 
 export function PGListingWizard() {
-  const [currentStep, setCurrentStep] = useState(2);
+  const [currentStep, setCurrentStep] = useState(3);
   const [completedSteps, setCompletedSteps] = useState<number[]>([]);
   const [listingData, setListingData] = useState({});
   const { toast } = useToast();
