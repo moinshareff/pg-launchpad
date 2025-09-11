@@ -2,41 +2,82 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
-
+/* PG Listing Dashboard Design System */
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Base colors */
+    --background: 248 250 252;
+    --foreground: 203 40% 20%;
 
+    /* Card system */
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 203 40% 20%;
+    --card-border: 213 27% 92%;
 
+    /* Popover system */
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 203 40% 20%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Primary brand colors - Modern indigo/blue */
+    --primary: 217 91% 60%;
+    --primary-foreground: 0 0% 100%;
+    --primary-light: 217 91% 95%;
+    --primary-dark: 217 91% 45%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Secondary colors */
+    --secondary: 213 27% 96%;
+    --secondary-foreground: 203 40% 30%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    /* Muted colors */
+    --muted: 213 27% 96%;
+    --muted-foreground: 215 16% 47%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    /* Accent colors */
+    --accent: 142 76% 96%;
+    --accent-foreground: 142 76% 36%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    /* Status colors */
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --success: 142 76% 46%;
+    --success-foreground: 0 0% 100%;
+    --warning: 48 96% 53%;
+    --warning-foreground: 48 96% 15%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    /* Form elements */
+    --border: 213 27% 92%;
+    --input: 0 0% 100%;
+    --input-border: 213 27% 88%;
+    --ring: 217 91% 60%;
 
-    --radius: 0.5rem;
+    /* Layout */
+    --radius: 0.75rem;
+    --radius-sm: 0.5rem;
+    --radius-lg: 1rem;
+
+    /* Step wizard */
+    --step-active: 217 91% 60%;
+    --step-complete: 142 76% 46%;
+    --step-inactive: 213 27% 84%;
+    --step-text-active: 0 0% 100%;
+    --step-text-complete: 0 0% 100%;
+    --step-text-inactive: 215 16% 47%;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(217 91% 60%), hsl(229 84% 62%));
+    --gradient-success: linear-gradient(135deg, hsl(142 76% 46%), hsl(158 64% 52%));
+    --gradient-hero: linear-gradient(135deg, hsl(217 91% 60%), hsl(229 84% 62%), hsl(248 95% 70%));
+
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 hsl(213 27% 84% / 0.3);
+    --shadow-md: 0 4px 6px -1px hsl(213 27% 84% / 0.4), 0 2px 4px -1px hsl(213 27% 84% / 0.3);
+    --shadow-lg: 0 10px 15px -3px hsl(213 27% 84% / 0.4), 0 4px 6px -2px hsl(213 27% 84% / 0.3);
+    --shadow-primary: 0 4px 14px 0 hsl(217 91% 60% / 0.25);
+
+    /* Transitions */
+    --transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 
     --sidebar-background: 0 0% 98%;
 
@@ -100,6 +141,36 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans;
+  }
+}
+
+@layer utilities {
+  .transition-fast {
+    transition: var(--transition-fast);
+  }
+  
+  .transition-smooth {
+    transition: var(--transition-smooth);
+  }
+  
+  .transition-bounce {
+    transition: var(--transition-bounce);
+  }
+  
+  .shadow-primary {
+    box-shadow: var(--shadow-primary);
+  }
+  
+  .gradient-primary {
+    background: var(--gradient-primary);
+  }
+  
+  .gradient-success {
+    background: var(--gradient-success);
+  }
+  
+  .gradient-hero {
+    background: var(--gradient-hero);
   }
 }
