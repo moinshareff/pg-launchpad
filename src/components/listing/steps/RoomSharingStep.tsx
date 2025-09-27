@@ -8,8 +8,8 @@ import { Button } from "@/components/ui/button";
 import { Plus, Minus } from "lucide-react";
 
 interface RoomSharingStepProps {
-  data: any;
-  onUpdate: (data: any) => void;
+  onDataChange: (data: any) => void;
+  initialData: any;
 }
 
 const roomTypes = [
@@ -34,8 +34,8 @@ const facilitiesOptions = [
   { id: "ac", label: "Air Conditioning", icon: "❄️" },
 ];
 
-export function RoomSharingStep({ data, onUpdate }: RoomSharingStepProps) {
-  const roomConfigs = data.roomConfigs || [];
+export function RoomSharingStep({ onDataChange, initialData }: RoomSharingStepProps) {
+  const roomConfigs = initialData.roomConfigs || [];
 
   const addRoomType = (roomType: string) => {
     const newConfig = {
@@ -47,22 +47,22 @@ export function RoomSharingStep({ data, onUpdate }: RoomSharingStepProps) {
       facilities: [],
     };
     
-    onUpdate({
-      ...data,
+    onDataChange({
+      ...initialData,
       roomConfigs: [...roomConfigs, newConfig],
     });
   };
 
   const removeRoomType = (index: number) => {
     const updatedConfigs = roomConfigs.filter((_: any, i: number) => i !== index);
-    onUpdate({ ...data, roomConfigs: updatedConfigs });
+    onDataChange({ ...initialData, roomConfigs: updatedConfigs });
   };
 
   const updateRoomConfig = (index: number, field: string, value: any) => {
     const updatedConfigs = roomConfigs.map((config: any, i: number) => 
       i === index ? { ...config, [field]: value } : config
     );
-    onUpdate({ ...data, roomConfigs: updatedConfigs });
+    onDataChange({ ...initialData, roomConfigs: updatedConfigs });
   };
 
   const toggleFacility = (roomIndex: number, facilityId: string) => {

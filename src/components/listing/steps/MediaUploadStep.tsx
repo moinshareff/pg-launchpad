@@ -4,23 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Upload, X, Image, Video, Camera } from "lucide-react";
 
 interface MediaUploadStepProps {
-  data: any;
-  onUpdate: (data: any) => void;
-}
-
-interface PhotoItem {
-  id: number;
-  url: string;
-  name: string;
-  size: number;
-}
-
-interface VideoItem {
-  id: number;
-  url: string;
-  name: string;
-  size: number;
-  type: string;
+  // Support both the old and new prop styles
+  data?: any;
+  onUpdate?: (data: any) => void;
+  initialData?: any;
+  onDataChange?: (data: any) => void;
 }
 
 const photoCategories = [
@@ -31,67 +19,55 @@ const photoCategories = [
   { id: "exterior", label: "Building Exterior", icon: "🏠", required: true, minPhotos: 1 },
 ];
 
-export function MediaUploadStep({ data, onUpdate }: MediaUploadStepProps) {
+export function MediaUploadStep({ data, onUpdate, initialData, onDataChange }: MediaUploadStepProps) {
+  const theData = initialData ?? data ?? {};
+  const update = (payload: any) => (onDataChange ?? onUpdate)?.(payload);
+
   const [dragOver, setDragOver] = useState<string | null>(null);
   
-  const photos: Record<string, PhotoItem[]> = data.photos || {};
-  const videos: VideoItem[] = data.videos || [];
+  const photos: Record<string, any[]> = theData.photos || {};
+  const videos: any[] = theData.videos || [];
 
   const handlePhotoUpload = (categoryId: string, files: FileList) => {
-    const newPhotos = { ...photos };
-    if (!newPhotos[categoryId]) {
-      newPhotos[categoryId] = [];
-    }
+    const newPhotos = { ...photos } as Record<string, any[]>;
+    if (!newPhotos[categoryId]) newPhotos[categoryId] = [];
     
     // Simulate file upload (in real app, upload to cloud storage)
     Array.from(files).forEach((file) => {
       const mockUrl = URL.createObjectURL(file);
-      newPhotos[categoryId].push({
-        id: Date.now() + Math.random(),
-        url: mockUrl,
-        name: file.name,
-        size: file.size,
-      });
+      newPhotos[categoryId].push({ id: Date.now() + Math.random(), url: mockUrl, name: file.name, size: file.size });
     });
     
-    onUpdate({ ...data, photos: newPhotos });
+    update({ ...theData, photos: newPhotos });
   };
 
   const removePhoto = (categoryId: string, photoId: number) => {
-    const newPhotos = { ...photos };
-    newPhotos[categoryId] = newPhotos[categoryId].filter((p) => p.id !== photoId);
-    onUpdate({ ...data, photos: newPhotos });
+    const newPhotos = { ...photos } as Record<string, any[]>;
+    newPhotos[categoryId] = newPhotos[categoryId].filter((p: any) => p.id !== photoId);
+    update({ ...theData, photos: newPhotos });
   };
 
   const handleVideoUpload = (files: FileList) => {
     const newVideos = [...videos];
     Array.from(files).forEach((file) => {
       const mockUrl = URL.createObjectURL(file);
-      newVideos.push({
-        id: Date.now() + Math.random(),
-        url: mockUrl,
-        name: file.name,
-        size: file.size,
-        type: file.type,
-      });
+      newVideos.push({ id: Date.now() + Math.random(), url: mockUrl, name: file.name, size: file.size, type: file.type });
     });
-    onUpdate({ ...data, videos: newVideos });
+    update({ ...theData, videos: newVideos });
   };
 
   const removeVideo = (videoId: number) => {
-    const newVideos = videos.filter((v) => v.id !== videoId);
-    onUpdate({ ...data, videos: newVideos });
+    const newVideos = videos.filter((v: any) => v.id !== videoId);
+    update({ ...theData, videos: newVideos });
   };
 
   const getTotalPhotos = (): number => {
-    return Object.values(photos).reduce((total: number, categoryPhotos: PhotoItem[]) => {
-      return total + (categoryPhotos?.length || 0);
-    }, 0);
+    return Object.values(photos).reduce((total: number, categoryPhotos: any[]) => total + (categoryPhotos?.length || 0), 0);
   };
 
   const getRequiredPhotosStatus = (): { total: number; completed: number } => {
-    const requiredCategories = photoCategories.filter(cat => cat.required);
-    const completedRequired = requiredCategories.filter(cat => {
+    const requiredCategories = photoCategories.filter((cat) => cat.required);
+    const completedRequired = requiredCategories.filter((cat) => {
       const categoryPhotos = photos[cat.id];
       return Array.isArray(categoryPhotos) && categoryPhotos.length >= cat.minPhotos;
     });

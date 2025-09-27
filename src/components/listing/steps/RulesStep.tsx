@@ -6,8 +6,8 @@ import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 
 interface RulesStepProps {
-  data: any;
-  onUpdate: (data: any) => void;
+  onDataChange: (data: any) => void;
+  initialData: any;
 }
 
 const curfewOptions = [
@@ -23,9 +23,9 @@ const visitorPolicies = [
   { value: "restricted-hours", label: "Restricted Hours Only", icon: "⏰" },
 ];
 
-export function RulesStep({ data, onUpdate }: RulesStepProps) {
+export function RulesStep({ onDataChange, initialData }: RulesStepProps) {
   const handleInputChange = (field: string, value: any) => {
-    onUpdate({ ...data, [field]: value });
+    onDataChange({ ...initialData, [field]: value });
   };
 
   return (
@@ -46,7 +46,7 @@ export function RulesStep({ data, onUpdate }: RulesStepProps) {
           <div className="space-y-3">
             <Label>Curfew Policy *</Label>
             <RadioGroup
-              value={data.curfewPolicy || ""}
+              value={initialData.curfewPolicy || ""}
               onValueChange={(value) => handleInputChange("curfewPolicy", value)}
               className="space-y-3"
             >
@@ -63,14 +63,14 @@ export function RulesStep({ data, onUpdate }: RulesStepProps) {
               ))}
             </RadioGroup>
             
-            {data.curfewPolicy === "fixed-timings" && (
+            {initialData.curfewPolicy === "fixed-timings" && (
               <div className="ml-6 grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="entryTime">Entry Time (from)</Label>
                   <Input
                     id="entryTime"
                     type="time"
-                    value={data.entryTimeFrom || ""}
+                    value={initialData.entryTimeFrom || ""}
                     onChange={(e) => handleInputChange("entryTimeFrom", e.target.value)}
                   />
                 </div>
@@ -79,7 +79,7 @@ export function RulesStep({ data, onUpdate }: RulesStepProps) {
                   <Input
                     id="exitTime"
                     type="time"
-                    value={data.entryTimeUntil || ""}
+                    value={initialData.entryTimeUntil || ""}
                     onChange={(e) => handleInputChange("entryTimeUntil", e.target.value)}
                   />
                 </div>
@@ -105,9 +105,9 @@ export function RulesStep({ data, onUpdate }: RulesStepProps) {
           <div className="space-y-3">
             <Label>Visitor Policy *</Label>
             <RadioGroup
-              value={data.visitorPolicy || ""}
+              value={initialData.visitorPolicy || ""}
               onValueChange={(value) => handleInputChange("visitorPolicy", value)}
-              className="grid grid-cols-1 sm:grid-cols-2 gap-3"
+              className="grid grid-cols-2 gap-3"
             >
               {visitorPolicies.map((option) => (
                 <div key={option.value} className="flex items-center space-x-3 border rounded-lg p-3 hover:bg-primary/5 transition-fast">
@@ -119,29 +119,39 @@ export function RulesStep({ data, onUpdate }: RulesStepProps) {
                 </div>
               ))}
             </RadioGroup>
-            
-            {data.visitorPolicy === "restricted-hours" && (
-              <div className="ml-6 grid grid-cols-2 gap-4">
+
+            {initialData.visitorPolicy === "restricted-hours" && (
+              <div className="mt-3 grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="visitorTimeFrom">Visitor Hours (from)</Label>
+                  <Label htmlFor="visitorHoursFrom">Visitor Hours (from)</Label>
                   <Input
-                    id="visitorTimeFrom"
+                    id="visitorHoursFrom"
                     type="time"
-                    value={data.visitorTimeFrom || ""}
-                    onChange={(e) => handleInputChange("visitorTimeFrom", e.target.value)}
+                    value={initialData.visitorHoursFrom || ""}
+                    onChange={(e) => handleInputChange("visitorHoursFrom", e.target.value)}
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="visitorTimeUntil">Visitor Hours (until)</Label>
+                  <Label htmlFor="visitorHoursTo">Visitor Hours (to)</Label>
                   <Input
-                    id="visitorTimeUntil"
+                    id="visitorHoursTo"
                     type="time"
-                    value={data.visitorTimeUntil || ""}
-                    onChange={(e) => handleInputChange("visitorTimeUntil", e.target.value)}
+                    value={initialData.visitorHoursTo || ""}
+                    onChange={(e) => handleInputChange("visitorHoursTo", e.target.value)}
                   />
                 </div>
               </div>
             )}
+          </div>
+
+          <div className="space-y-3">
+            <Label>Additional Rules</Label>
+            <Textarea
+              placeholder="e.g., No smoking in rooms, no loud music after 11 PM..."
+              value={initialData.additionalRules || ""}
+              onChange={(e) => handleInputChange("additionalRules", e.target.value)}
+              rows={4}
+            />
           </div>
         </CardContent>
       </Card>
@@ -171,7 +181,7 @@ export function RulesStep({ data, onUpdate }: RulesStepProps) {
                 </p>
               </div>
               <Switch
-                checked={data.smokingAllowed || false}
+                checked={initialData.smokingAllowed || false}
                 onCheckedChange={(checked) => handleInputChange("smokingAllowed", checked)}
               />
             </div>
@@ -187,7 +197,7 @@ export function RulesStep({ data, onUpdate }: RulesStepProps) {
                 </p>
               </div>
               <Switch
-                checked={data.drinkingAllowed || false}
+                checked={initialData.drinkingAllowed || false}
                 onCheckedChange={(checked) => handleInputChange("drinkingAllowed", checked)}
               />
             </div>
@@ -203,7 +213,7 @@ export function RulesStep({ data, onUpdate }: RulesStepProps) {
                 </p>
               </div>
               <Switch
-                checked={data.petsAllowed || false}
+                checked={initialData.petsAllowed || false}
                 onCheckedChange={(checked) => handleInputChange("petsAllowed", checked)}
               />
             </div>
@@ -219,47 +229,58 @@ export function RulesStep({ data, onUpdate }: RulesStepProps) {
                 </p>
               </div>
               <Switch
-                checked={data.loudMusicAllowed || false}
+                checked={initialData.loudMusicAllowed || false}
                 onCheckedChange={(checked) => handleInputChange("loudMusicAllowed", checked)}
               />
             </div>
-          </div>
-        </CardContent>
-      </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-lg bg-destructive/10 flex items-center justify-center">
-              📋
+            <div className="flex items-center justify-between border rounded-lg p-4">
+              <div className="space-y-1">
+                <Label className="flex items-center gap-2">
+                  <span>🍽️</span>
+                  Non-Vegetarian Food Allowed
+                </Label>
+                <p className="text-sm text-muted-foreground">
+                  Allow non-vegetarian food to be cooked or consumed
+                </p>
+              </div>
+              <Switch
+                checked={initialData.nonVegAllowed || false}
+                onCheckedChange={(checked) => handleInputChange("nonVegAllowed", checked)}
+              />
             </div>
-            Additional Rules
-          </CardTitle>
-          <CardDescription>
-            Add any other specific rules or guidelines
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="additionalRules">House Rules & Guidelines</Label>
-            <Textarea
-              id="additionalRules"
-              placeholder="e.g., Maintain cleanliness, respect other residents, no overnight guests without permission, kitchen timings, etc."
-              rows={5}
-              value={data.additionalRules || ""}
-              onChange={(e) => handleInputChange("additionalRules", e.target.value)}
-            />
-          </div>
-          
-          <div className="p-4 bg-muted/50 rounded-lg">
-            <h4 className="font-medium mb-2">💡 House Rules Tips:</h4>
-            <ul className="text-sm text-muted-foreground space-y-1">
-              <li>• Keep rules clear and reasonable</li>
-              <li>• Include kitchen and common area usage guidelines</li>
-              <li>• Mention noise policies for study/sleep hours</li>
-              <li>• Add any cultural or religious considerations</li>
-              <li>• Include guest registration requirements</li>
-            </ul>
+
+            <div className="flex items-center justify-between border rounded-lg p-4">
+              <div className="space-y-1">
+                <Label className="flex items-center gap-2">
+                  <span>🚻</span>
+                  Opposite Gender Allowed in Rooms
+                </Label>
+                <p className="text-sm text-muted-foreground">
+                  Allow opposite-gender visitors in private rooms
+                </p>
+              </div>
+              <Switch
+                checked={initialData.oppositeGenderAllowed || false}
+                onCheckedChange={(checked) => handleInputChange("oppositeGenderAllowed", checked)}
+              />
+            </div>
+
+            <div className="flex items-center justify-between border rounded-lg p-4">
+              <div className="space-y-1">
+                <Label className="flex items-center gap-2">
+                  <span>👨‍👩‍👧‍👦</span>
+                  Guardian Stay Allowed
+                </Label>
+                <p className="text-sm text-muted-foreground">
+                  Allow guardian or family member to stay overnight
+                </p>
+              </div>
+              <Switch
+                checked={initialData.guardianStayAllowed || false}
+                onCheckedChange={(checked) => handleInputChange("guardianStayAllowed", checked)}
+              />
+            </div>
           </div>
         </CardContent>
       </Card>

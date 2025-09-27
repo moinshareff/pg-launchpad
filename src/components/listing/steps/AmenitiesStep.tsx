@@ -3,8 +3,8 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 
 interface AmenitiesStepProps {
-  data: any;
-  onUpdate: (data: any) => void;
+  onDataChange: (data: any) => void;
+  initialData: any;
 }
 
 const amenityCategories = [
@@ -66,15 +66,15 @@ const amenityCategories = [
   }
 ];
 
-export function AmenitiesStep({ data, onUpdate }: AmenitiesStepProps) {
-  const selectedAmenities = data.amenities || [];
+export function AmenitiesStep({ onDataChange, initialData }: AmenitiesStepProps) {
+  const selectedAmenities = initialData.amenities || [];
 
   const toggleAmenity = (amenityId: string) => {
     const updatedAmenities = selectedAmenities.includes(amenityId)
       ? selectedAmenities.filter((id: string) => id !== amenityId)
       : [...selectedAmenities, amenityId];
     
-    onUpdate({ ...data, amenities: updatedAmenities });
+    onDataChange({ ...initialData, amenities: updatedAmenities });
   };
 
   const selectAllInCategory = (categoryAmenities: any[]) => {
@@ -84,11 +84,11 @@ export function AmenitiesStep({ data, onUpdate }: AmenitiesStepProps) {
     if (allSelected) {
       // Deselect all in category
       const updatedAmenities = selectedAmenities.filter((id: string) => !categoryIds.includes(id));
-      onUpdate({ ...data, amenities: updatedAmenities });
+      onDataChange({ ...initialData, amenities: updatedAmenities });
     } else {
       // Select all in category
       const newAmenities = [...new Set([...selectedAmenities, ...categoryIds])];
-      onUpdate({ ...data, amenities: newAmenities });
+      onDataChange({ ...initialData, amenities: newAmenities });
     }
   };
 

@@ -1,0 +1,145 @@
+@use "./variables" as *;
+
+/* Layout helpers */
+.container {
+  max-width: 80rem;
+  margin-inline: auto;
+  padding-inline: 1rem;
+}
+
+.grid-main {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Grid span utilities */
+.span-all { grid-column: 1 / -1; }
+@media (min-width: 768px) {
+  .span-2 { grid-column: span 2; }
+  .span-1 { grid-column: span 1; }
+}
+
+/* Simple flex/spacing helpers */
+.row { display: flex; align-items: center; }
+.row-start { display: flex; align-items: flex-start; }
+.gap-1 { gap: .25rem; }
+.gap-2 { gap: .5rem; }
+.gap-3 { gap: .75rem; }
+.mt-3 { margin-top: .75rem; }
+.mb-1 { margin-bottom: .25rem; }
+
+.text-xsmall { font-size: .75rem; }
+.text-small { font-size: .875rem; }
+.text-base { font-size: 1rem; }
+.kpi { font-size: 2.25rem; font-weight: 600; }
+.muted { color: var(--pg-muted); }
+
+/* Header */
+.header {
+  border-bottom: 1px solid var(--pg-border);
+  background: rgba(255,255,255,0.8);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+
+  &__inner {
+    @extend .container;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-block: 0.75rem;
+  }
+
+  &__nav {
+    display: none;
+    gap: 1.25rem;
+    font-size: 0.875rem;
+
+    @media (min-width: 768px) {
+      display: flex;
+    }
+
+    a {
+      color: var(--pg-fg);
+      text-decoration: none;
+
+      &:hover { text-decoration: underline; }
+    }
+  }
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+  border-radius: var(--pg-radius);
+  font-size: .875rem;
+  font-weight: 500;
+  padding: .5rem .75rem;
+  border: 1px solid transparent;
+  background: var(--pg-primary);
+  color: #fff;
+  cursor: pointer;
+  transition: background .15s ease, color .15s ease, border-color .15s ease;
+
+  &--outline { background: #fff; color: var(--pg-fg); border-color: var(--pg-border); }
+  &--ghost { background: transparent; color: var(--pg-fg); }
+  &--icon { width: 2.25rem; height: 2.25rem; padding: 0; }
+  &--block { width: 100%; justify-content: flex-start; }
+}
+
+/* Badges */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: .125rem .5rem;
+  font-size: .75rem;
+  &--outline { border: 1px solid var(--pg-border); }
+}
+
+/* Avatar */
+.avatar {
+  width: 2rem; height: 2rem;
+  border-radius: 999px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: #eee; color: var(--pg-fg); font-weight: 600;
+}
+
+/* Cards */
+.card { border: 1px solid var(--pg-border); border-radius: var(--pg-radius); background: var(--pg-bg); box-shadow: $shadow-sm; }
+.card__header { padding: 1rem 1rem .5rem; }
+.card__title { font-weight: 600; display:flex; align-items:center; justify-content:space-between; }
+.card__desc { color: var(--pg-muted); font-size: 0.875rem; }
+.card__content { padding: 0 1rem 1rem; }
+
+/* Quick actions grid */
+.quick-actions { display: grid; gap: .75rem; grid-template-columns: 1fr; }
+@media (min-width: 640px) { .quick-actions { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 768px) { .quick-actions { grid-template-columns: repeat(5, 1fr); } }
+
+/* Alerts */
+.alert {
+  display: flex; align-items: flex-start; justify-content: space-between; gap: .5rem;
+  border: 1px solid var(--pg-border); border-left: 4px solid var(--pg-fg);
+  background: #fff; padding: .75rem; border-radius: var(--pg-radius);
+}
+
+/* Generic list item */
+.list-item { border: 1px solid var(--pg-border); border-radius: var(--pg-radius); padding: .75rem; }
+
+/* Stats */
+.stat { border: 1px solid var(--pg-border); border-radius: var(--pg-radius); padding: .75rem; }
+.stat__label { color: var(--pg-muted); font-size: .75rem; }
+.stat__value { font-weight: 600; }
+
+/* Table */
+.table { width: 100%; border-collapse: collapse; font-size: .875rem; }
+.table th, .table td { padding: .5rem; border-bottom: 1px solid var(--pg-border); text-align: left; }
+.table thead th { font-size: .75rem; color: var(--pg-muted); font-weight: 500; }

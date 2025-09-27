@@ -6,8 +6,8 @@ import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
 
 interface FoodOptionsStepProps {
-  data: any;
-  onUpdate: (data: any) => void;
+  onDataChange: (data: any) => void;
+  initialData: any;
 }
 
 const foodTypes = [
@@ -23,13 +23,13 @@ const mealOptions = [
   { id: "dinner", label: "Dinner", icon: "🌙", time: "19:00 - 22:00" },
 ];
 
-export function FoodOptionsStep({ data, onUpdate }: FoodOptionsStepProps) {
+export function FoodOptionsStep({ onDataChange, initialData }: FoodOptionsStepProps) {
   const handleInputChange = (field: string, value: any) => {
-    onUpdate({ ...data, [field]: value });
+    onDataChange({ ...initialData, [field]: value });
   };
 
   const toggleMeal = (mealId: string) => {
-    const currentMeals = data.mealPlans || [];
+    const currentMeals = initialData.mealPlans || [];
     const updatedMeals = currentMeals.includes(mealId)
       ? currentMeals.filter((m: string) => m !== mealId)
       : [...currentMeals, mealId];
@@ -38,11 +38,11 @@ export function FoodOptionsStep({ data, onUpdate }: FoodOptionsStepProps) {
   };
 
   const updateMealTiming = (mealId: string, timing: string) => {
-    const timings = data.mealTimings || {};
+    const timings = initialData.mealTimings || {};
     handleInputChange("mealTimings", { ...timings, [mealId]: timing });
   };
 
-  const showMealOptions = data.foodType && data.foodType !== "no-food";
+  const showMealOptions = initialData.foodType && initialData.foodType !== "no-food";
 
   return (
     <div className="space-y-6">
@@ -62,7 +62,7 @@ export function FoodOptionsStep({ data, onUpdate }: FoodOptionsStepProps) {
           <div className="space-y-3">
             <Label>Food Type *</Label>
             <RadioGroup
-              value={data.foodType || ""}
+              value={initialData.foodType || ""}
               onValueChange={(value) => handleInputChange("foodType", value)}
               className="space-y-3"
             >
@@ -102,7 +102,7 @@ export function FoodOptionsStep({ data, onUpdate }: FoodOptionsStepProps) {
             <CardContent className="space-y-6">
               <div className="space-y-4">
                 {mealOptions.map((meal) => {
-                  const isSelected = (data.mealPlans || []).includes(meal.id);
+                  const isSelected = (initialData.mealPlans || []).includes(meal.id);
                   
                   return (
                     <div key={meal.id} className="space-y-3">
@@ -130,8 +130,8 @@ export function FoodOptionsStep({ data, onUpdate }: FoodOptionsStepProps) {
                             <Input
                               id={`${meal.id}-start`}
                               type="time"
-                              value={data.mealTimings?.[meal.id]?.start || ""}
-                              onChange={(e) => updateMealTiming(meal.id, { ...data.mealTimings?.[meal.id], start: e.target.value })}
+                              value={initialData.mealTimings?.[meal.id]?.start || ""}
+                              onChange={(e) => updateMealTiming(meal.id, { ...initialData.mealTimings?.[meal.id], start: e.target.value })}
                             />
                           </div>
                           <div className="space-y-2">
@@ -139,8 +139,8 @@ export function FoodOptionsStep({ data, onUpdate }: FoodOptionsStepProps) {
                             <Input
                               id={`${meal.id}-end`}
                               type="time"
-                              value={data.mealTimings?.[meal.id]?.end || ""}
-                              onChange={(e) => updateMealTiming(meal.id, { ...data.mealTimings?.[meal.id], end: e.target.value })}
+                              value={initialData.mealTimings?.[meal.id]?.end || ""}
+                              onChange={(e) => updateMealTiming(meal.id, { ...initialData.mealTimings?.[meal.id], end: e.target.value })}
                             />
                           </div>
                         </div>
@@ -173,12 +173,12 @@ export function FoodOptionsStep({ data, onUpdate }: FoodOptionsStepProps) {
                   </p>
                 </div>
                 <Switch
-                  checked={data.cookingAllowed || false}
+                  checked={initialData.cookingAllowed || false}
                   onCheckedChange={(checked) => handleInputChange("cookingAllowed", checked)}
                 />
               </div>
               
-              {data.cookingAllowed && (
+              {initialData.cookingAllowed && (
                 <div className="ml-4 p-4 bg-muted/50 rounded-lg">
                   <p className="text-sm text-muted-foreground">
                     💡 Tip: Consider adding cooking timings or kitchen usage rules in the Rules section
@@ -190,7 +190,7 @@ export function FoodOptionsStep({ data, onUpdate }: FoodOptionsStepProps) {
         </>
       )}
 
-      {data.foodType === "no-food" && (
+      {initialData.foodType === "no-food" && (
         <Card>
           <CardContent className="text-center py-12">
             <div className="text-4xl mb-4">🍽️</div>

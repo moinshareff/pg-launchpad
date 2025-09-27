@@ -6,8 +6,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 
 interface PricingStepProps {
-  data: any;
-  onUpdate: (data: any) => void;
+  onDataChange: (data: any) => void;
+  initialData: any;
 }
 
 const advanceOptions = [
@@ -17,9 +17,9 @@ const advanceOptions = [
   { value: "custom", label: "Custom Amount" },
 ];
 
-export function PricingStep({ data, onUpdate }: PricingStepProps) {
+export function PricingStep({ onDataChange, initialData }: PricingStepProps) {
   const handleInputChange = (field: string, value: any) => {
-    onUpdate({ ...data, [field]: value });
+    onDataChange({ ...initialData, [field]: value });
   };
 
   return (
@@ -47,7 +47,7 @@ export function PricingStep({ data, onUpdate }: PricingStepProps) {
                   type="number"
                   placeholder="25000"
                   className="pl-8"
-                  value={data.securityDeposit || ""}
+                  value={initialData.securityDeposit || ""}
                   onChange={(e) => handleInputChange("securityDeposit", e.target.value)}
                 />
               </div>
@@ -65,7 +65,7 @@ export function PricingStep({ data, onUpdate }: PricingStepProps) {
                   type="number"
                   placeholder="1000"
                   className="pl-8"
-                  value={data.maintenanceCharges || ""}
+                  value={initialData.maintenanceCharges || ""}
                   onChange={(e) => handleInputChange("maintenanceCharges", e.target.value)}
                 />
               </div>
@@ -78,7 +78,7 @@ export function PricingStep({ data, onUpdate }: PricingStepProps) {
           <div className="space-y-3">
             <Label>Advance Payment Terms *</Label>
             <RadioGroup
-              value={data.advancePayment || ""}
+              value={initialData.advancePayment || ""}
               onValueChange={(value) => handleInputChange("advancePayment", value)}
               className="grid grid-cols-1 sm:grid-cols-2 gap-3"
             >
@@ -92,7 +92,7 @@ export function PricingStep({ data, onUpdate }: PricingStepProps) {
               ))}
             </RadioGroup>
             
-            {data.advancePayment === "custom" && (
+            {initialData.advancePayment === "custom" && (
               <div className="mt-3 space-y-2">
                 <Label htmlFor="customAdvance">Custom Advance Amount</Label>
                 <div className="relative">
@@ -100,10 +100,10 @@ export function PricingStep({ data, onUpdate }: PricingStepProps) {
                   <Input
                     id="customAdvance"
                     type="number"
-                    placeholder="Enter custom amount"
+                    placeholder="30000"
                     className="pl-8"
-                    value={data.customAdvanceAmount || ""}
-                    onChange={(e) => handleInputChange("customAdvanceAmount", e.target.value)}
+                    value={initialData.customAdvance || ""}
+                    onChange={(e) => handleInputChange("customAdvance", e.target.value)}
                   />
                 </div>
               </div>
@@ -129,7 +129,7 @@ export function PricingStep({ data, onUpdate }: PricingStepProps) {
             <div className="space-y-3">
               <Label>Electricity Charges *</Label>
               <RadioGroup
-                value={data.electricityCharges || ""}
+                value={initialData.electricityCharges || ""}
                 onValueChange={(value) => handleInputChange("electricityCharges", value)}
                 className="space-y-2"
               >
@@ -171,7 +171,7 @@ export function PricingStep({ data, onUpdate }: PricingStepProps) {
                 </div>
               </RadioGroup>
               
-              {data.electricityCharges === "fixed" && (
+              {initialData.electricityCharges === "fixed" && (
                 <div className="ml-6 space-y-2">
                   <Label htmlFor="fixedElectAmount">Fixed Monthly Amount</Label>
                   <div className="relative">
@@ -181,7 +181,7 @@ export function PricingStep({ data, onUpdate }: PricingStepProps) {
                       type="number"
                       placeholder="500"
                       className="pl-8"
-                      value={data.fixedElectricityAmount || ""}
+                      value={initialData.fixedElectricityAmount || ""}
                       onChange={(e) => handleInputChange("fixedElectricityAmount", e.target.value)}
                     />
                   </div>
@@ -192,7 +192,7 @@ export function PricingStep({ data, onUpdate }: PricingStepProps) {
             <div className="space-y-3">
               <Label>Water Charges *</Label>
               <RadioGroup
-                value={data.waterCharges || ""}
+                value={initialData.waterCharges || ""}
                 onValueChange={(value) => handleInputChange("waterCharges", value)}
                 className="space-y-2"
               >
@@ -234,7 +234,7 @@ export function PricingStep({ data, onUpdate }: PricingStepProps) {
                 </div>
               </RadioGroup>
               
-              {data.waterCharges === "fixed" && (
+              {initialData.waterCharges === "fixed" && (
                 <div className="ml-6 space-y-2">
                   <Label htmlFor="fixedWaterAmount">Fixed Monthly Amount</Label>
                   <div className="relative">
@@ -244,7 +244,7 @@ export function PricingStep({ data, onUpdate }: PricingStepProps) {
                       type="number"
                       placeholder="200"
                       className="pl-8"
-                      value={data.fixedWaterAmount || ""}
+                      value={initialData.fixedWaterAmount || ""}
                       onChange={(e) => handleInputChange("fixedWaterAmount", e.target.value)}
                     />
                   </div>
@@ -274,7 +274,7 @@ export function PricingStep({ data, onUpdate }: PricingStepProps) {
               id="refundPolicy"
               placeholder="e.g., Security deposit will be refunded within 30 days after checkout, subject to deductions for damages if any..."
               rows={4}
-              value={data.refundPolicy || ""}
+              value={initialData.refundPolicy || ""}
               onChange={(e) => handleInputChange("refundPolicy", e.target.value)}
             />
           </div>

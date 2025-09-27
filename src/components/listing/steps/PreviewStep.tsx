@@ -4,48 +4,44 @@ import { Badge } from "@/components/ui/badge";
 import { Edit, CheckCircle, AlertCircle, MapPin, Users, Utensils, Star } from "lucide-react";
 
 interface PreviewStepProps {
-  data: any;
-  onEdit: (step: number) => void;
-  onSubmit: () => void;
+  // Support both prop styles
+  data?: any;
+  onEdit?: (step: number) => void;
+  onSubmit?: () => void;
+  listingData?: any;
 }
 
-export function PreviewStep({ data, onEdit, onSubmit }: PreviewStepProps) {
+export function PreviewStep({ data, onEdit, onSubmit, listingData }: PreviewStepProps) {
+  const theData = data ?? listingData ?? {};
+
   const getStepCompletionStatus = () => {
+    const d = theData as any;
     const checks = [
-      { step: 1, name: "General Info", complete: data.pgName && data.pgType && data.location },
-      { step: 2, name: "Room Config", complete: data.roomConfigs && data.roomConfigs.length > 0 },
-      { step: 3, name: "Food Options", complete: data.foodType },
-      { step: 4, name: "Amenities", complete: data.amenities && data.amenities.length > 0 },
-      { step: 5, name: "Pricing", complete: data.securityDeposit && data.advancePayment },
-      { step: 6, name: "Rules", complete: data.curfewPolicy && data.visitorPolicy },
-      { step: 7, name: "Media", complete: data.photos && Object.values(data.photos).some((arr: any) => arr.length > 0) },
+      { step: 1, name: "General Info", complete: d.pgName && d.pgType && d.location },
+      { step: 2, name: "Room Config", complete: d.roomConfigs && d.roomConfigs.length > 0 },
+      { step: 3, name: "Food Options", complete: d.foodType },
+      { step: 4, name: "Amenities", complete: d.amenities && d.amenities.length > 0 },
+      { step: 5, name: "Pricing", complete: d.securityDeposit && d.advancePayment },
+      { step: 6, name: "Rules", complete: d.curfewPolicy && d.visitorPolicy },
+      { step: 7, name: "Media", complete: d.photos && Object.values(d.photos).some((arr: any) => (arr as any[]).length > 0) },
     ];
-    
     return checks;
   };
 
   const completionStatus = getStepCompletionStatus();
-  const completedSteps = completionStatus.filter(step => step.complete).length;
+  const completedSteps = completionStatus.filter((s) => s.complete).length;
   const totalSteps = completionStatus.length;
   const isComplete = completedSteps === totalSteps;
 
   const getMainPhoto = () => {
-    if (!data.photos) return null;
-    for (const category of Object.values(data.photos)) {
-      if (Array.isArray(category) && category.length > 0) {
-        return category[0].url;
-      }
+    if (!theData.photos) return null;
+    for (const category of Object.values(theData.photos) as any[]) {
+      if (Array.isArray(category) && category.length > 0) return category[0].url;
     }
     return null;
   };
 
-  const formatPrice = (amount: string | number) => {
-    return new Intl.NumberFormat('en-IN', {
-      style: 'currency',
-      currency: 'INR',
-      maximumFractionDigits: 0,
-    }).format(Number(amount || 0));
-  };
+  const formatPrice = (amount: string | number) => new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(Number(amount || 0));
 
   return (
     <div className="space-y-6">
@@ -71,30 +67,27 @@ export function PreviewStep({ data, onEdit, onSubmit }: PreviewStepProps) {
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-            {completionStatus.map((step) => (
-              <div
-                key={step.step}
-                className={`flex items-center justify-between p-3 rounded-lg border ${
-                  step.complete ? 'bg-success/10 border-success/30' : 'bg-warning/10 border-warning/30'
-                }`}
-              >
-                <span className="text-sm font-medium">{step.name}</span>
-                <div className="flex items-center gap-2">
-                  {step.complete ? (
-                    <CheckCircle className="h-4 w-4 text-success" />
-                  ) : (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => onEdit(step.step)}
-                      className="h-6 px-2 text-xs"
-                    >
-                      Edit
-                    </Button>
-                  )}
+            {completionStatus.map((step) => {
+              const panelClass = step.complete
+                ? "flex items-center justify-between p-3 rounded-lg border bg-success/5 border-success/40"
+                : "flex items-center justify-between p-3 rounded-lg border bg-white border-warning/40 border-l-4 pl-3";
+              return (
+                <div key={step.step} className={panelClass}>
+                  <span className="text-sm font-medium">{step.name}</span>
+                  <div className="flex items-center gap-2">
+                    {step.complete ? (
+                      <CheckCircle className="h-4 w-4 text-success" />
+                    ) : (
+                      onEdit && (
+                        <Button variant="outline" size="sm" onClick={() => onEdit(step.step)} className="h-6 px-2 text-xs">
+                          Edit
+                        </Button>
+                      )
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </CardContent>
       </Card>
